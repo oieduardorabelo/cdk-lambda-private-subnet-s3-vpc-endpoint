@@ -10,4 +10,4 @@ CDK example of:
 
 Final architecture:
 
-![](final-architecture.png)
+![](./diagram.png)
