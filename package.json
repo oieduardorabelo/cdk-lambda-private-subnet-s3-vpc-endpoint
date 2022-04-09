@@ -1,0 +1,45 @@
+{
+  "name": "lambda-private-dynamodb",
+  "version": "0.1.0",
+  "license": "MIT",
+  "bin": {
+    "lambda-private-dynamodb": "bin/lambda-private-dynamodb.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "cdk": "cdk",
+    "format:code": "prettier --write './**/*.{js,ts}'",
+    "postinstall": "npx simple-git-hooks",
+    "test": "jest",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.67.0",
+    "nanoid": "3.3.2",
+    "unique-names-generator": "4.7.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.93",
+    "@types/jest": "27.4.1",
+    "@types/node": "17.0.23",
+    "aws-cdk": "2.18.0",
+    "aws-cdk-lib": "2.18.0",
+    "constructs": "10.0.101",
+    "esbuild": "0.14.29",
+    "jest": "27.5.1",
+    "nano-staged": "0.6.0",
+    "prettier": "2.6.1",
+    "prettier-package-json": "2.6.3",
+    "simple-git-hooks": "2.7.0",
+    "ts-jest": "27.1.4",
+    "ts-node": "10.7.0",
+    "typescript": "4.6.3"
+  },
+  "nano-staged": {
+    "*.{js,ts}": "prettier --write",
+    "*.json": "prettier-package-json --write"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "./node_modules/.bin/nano-staged"
+  }
+}
