@@ -70,7 +70,6 @@ export class LambdaPrivateS3Stack extends cdk.Stack {
         entry: "./lib/functions/lambda-notification-put-object.ts",
         environment: {
           AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
-          BUCKET_NAME: bucket.bucketName,
         },
         vpc,
         vpcSubnets: {

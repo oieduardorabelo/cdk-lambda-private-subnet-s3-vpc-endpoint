@@ -1,21 +1,43 @@
-import { GetObjectCommand, S3 } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, S3 } from "@aws-sdk/client-s3";
 
 import { Context } from "aws-lambda";
-
-let { BUCKET_NAME } = process.env;
 
 let client = new S3({});
 
 let handler = async (event: S3ObjectPutNotificationEvent, context: Context) => {
   for (const item of event.Records) {
     try {
-      console.log(BUCKET_NAME, item.s3.bucket.name);
-      let commandPutItem = new GetObjectCommand({
+      let commandGetObject = new GetObjectCommand({
         Bucket: item.s3.bucket.name,
         Key: item.s3.object.key,
       });
-      let file = await client.send(commandPutItem);
-      console.log(file);
+      let { Body: readable } = await client.send(commandGetObject);
+      let body: string = await new Promise((res, rej) => {
+        let chunks: Buffer[] = [];
+        readable.on("readable", () => {
+          let chunk: Buffer;
+          while ((chunk = readable.read()) !== null) {
+            chunks.push(chunk);
+          }
+        });
+        readable.on("end", () => {
+          res(chunks.join(""));
+        });
+        readable.on("error", (err: Error) => {
+          rej(err);
+        });
+      });
+
+      let json = JSON.parse(body);
+      json.enriched = true;
+      json.enriched_timestamp = Date.now();
+
+      let commandPutObject = new PutObjectCommand({
+        Bucket: item.s3.bucket.name,
+        Key: `enriched_files/${json.id}`,
+        Body: JSON.stringify(json),
+      });
+      await client.send(commandPutObject);
     } catch (err) {
       console.error(err);
     }

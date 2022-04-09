@@ -23,12 +23,12 @@ let handler: APIGatewayProxyHandler = async (event, context) => {
         dictionaries: [adjectives, colors, animals],
       }),
     };
-    let commandPutItem = new PutObjectCommand({
+    let commandPutObject = new PutObjectCommand({
       Bucket: BUCKET_NAME,
       Key: `new_files/${new_file.id}`,
       Body: JSON.stringify(new_file),
     });
-    await client.send(commandPutItem);
+    await client.send(commandPutObject);
 
     return {
       statusCode: 200,
